@@ -3,6 +3,8 @@ package main
 type ServerPool interface{
 	GetServerPool()  	[]*backend
 	GetValidPeer()	 	*backend
-	AddPeer()
+	AddPeer(*backend)
 	GetServerPoolSize()	int
 }
+
+
