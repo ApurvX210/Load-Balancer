@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"net/http"
@@ -15,7 +15,7 @@ type Server interface {
 	Serve(http.ResponseWriter,*http.Request)
 }
 
-type backend struct{
+type Backend struct{
 	url 			*url.URL
 	alive			bool
 	mu      		sync.RWMutex
@@ -23,26 +23,26 @@ type backend struct{
 	reverseProxy 	*httputil.ReverseProxy
 }
 
-func (b *backend) IsAlive(){
+func (b *Backend) IsAlive(){
 	
 }
 
-func (b *backend) SetAlive(){
+func (b *Backend) SetAlive(){
 	b.alive = true
 }
 
-func (b *backend) GetUrl() *url.URL{
+func (b *Backend) GetUrl() *url.URL{
 	return b.url
 }
 
-func (b *backend) GetActiveConnection() int{
+func (b *Backend) GetActiveConnection() int{
 	b.mu.RLock()
 	defer b.mu.RLocker().Unlock()
 
 	return b.connections
 }
 
-func (b *backend) Serve(rw http.ResponseWriter,req *http.Request){
+func (b *Backend) Serve(rw http.ResponseWriter,req *http.Request){
 	b.reverseProxy.ServeHTTP(rw,req)
 }
 
