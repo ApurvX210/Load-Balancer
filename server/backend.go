@@ -9,7 +9,7 @@ import (
 
 type Server interface {
 	IsAlive()
-	SetAlive()
+	SetAlive(alive bool)
 	GetUrl() *url.URL
 	GetActiveConnection() int
 	Serve(http.ResponseWriter,*http.Request)
@@ -27,8 +27,8 @@ func (b *Backend) IsAlive() bool{
 	return b.Alive
 }
 
-func (b *Backend) SetAlive(){
-	b.Alive = true
+func (b *Backend) SetAlive(alive bool){
+	b.Alive = alive
 }
 
 func (b *Backend) GetUrl() *url.URL{

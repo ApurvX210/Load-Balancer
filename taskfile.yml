@@ -3,11 +3,11 @@ version: 3
 tasks:
   build:
     cmds: 
-      - go build -o bin/fs.exe
+      - go build -o bin/main.exe
   run:
     deps: [build]
     cmds: 
-      bin/fs.exe
+      - bin/main.exe
   test:
     cmds:
       - go test -v ./...
