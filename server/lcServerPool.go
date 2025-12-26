@@ -13,7 +13,7 @@ func (lc *LcServerPool) GetServerPool() []*Backend{
 }
 
 func (lc *LcServerPool) GetValidPeer() *Backend{
-	targetBackend := nil
+	var targetBackend *Backend;
 	for backend := range(lc.backends){
 		if targetBackend == nil{
 			targetBackend = backend

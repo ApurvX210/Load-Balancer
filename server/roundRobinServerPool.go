@@ -5,7 +5,7 @@ import "sync"
 type RrServerPool struct {
 	backends  []*Backend
 	mu        sync.RWMutex
-	crnPeer *Backend
+	crnIndex  int
 }
 
 func (lc *RrServerPool) GetServerPool() []*Backend{
@@ -16,10 +16,10 @@ func (lc *RrServerPool) GetValidPeer() *Backend{
 	
 }
 
-func (lc *LcServerPool) AddPeer(b *Backend) {
+func (lc *RrServerPool) AddPeer(b *Backend) {
 	lc.backends = append(lc.backends, b)
 }
 
-func (lc *LcServerPool) GetServerPoolSize() int{
+func (lc *RrServerPool) GetServerPoolSize() int{
 	return len(lc.backends)
 }

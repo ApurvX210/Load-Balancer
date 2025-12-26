@@ -1,8 +1,8 @@
 package server
 
 type ServerPool interface{
-	GetServerPool()  	[]*backend
-	GetValidPeer()	 	*backend
-	AddPeer(*backend)
+	GetServerPool()  	[]*Backend
+	GetValidPeer()	 	*Backend
+	AddPeer(*Backend)
 	GetServerPoolSize()	int
 }
