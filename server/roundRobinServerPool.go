@@ -12,8 +12,25 @@ func (lc *RrServerPool) GetServerPool() []*Backend{
 	return lc.backends
 }
 
+func (lc *RrServerPool) Rotate() *Backend{
+	lc.mu.Lock()
+	defer lc.mu.Unlock()
+
+	lc.crnIndex = (lc.crnIndex+1) % lc.GetServerPoolSize()
+
+	return lc.backends[lc.crnIndex]
+}
+
 func (lc *RrServerPool) GetValidPeer() *Backend{
-	
+	crnLen := lc.GetServerPoolSize()
+
+	for idx:=0;idx<crnLen;idx++{
+		targetServer := lc.Rotate()
+		if targetServer.IsAlive(){
+			return targetServer
+		}
+	}
+	return nil
 }
 
 func (lc *RrServerPool) AddPeer(b *Backend) {

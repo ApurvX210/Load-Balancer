@@ -17,18 +17,18 @@ type Server interface {
 
 type Backend struct{
 	url 			*url.URL
-	alive			bool
+	Alive			bool
 	mu      		sync.RWMutex
 	connections		int
 	reverseProxy 	*httputil.ReverseProxy
 }
 
-func (b *Backend) IsAlive(){
-	
+func (b *Backend) IsAlive() bool{
+	return b.Alive
 }
 
 func (b *Backend) SetAlive(){
-	b.alive = true
+	b.Alive = true
 }
 
 func (b *Backend) GetUrl() *url.URL{

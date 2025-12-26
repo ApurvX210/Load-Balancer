@@ -5,7 +5,7 @@ import "sync"
 type LcServerPool struct {
 	backends  []*Backend
 	mu        sync.RWMutex
-	crnPeer *Backend
+	// crnPeer *Backend
 }
 
 func (lc *LcServerPool) GetServerPool() []*Backend{
@@ -15,10 +15,10 @@ func (lc *LcServerPool) GetServerPool() []*Backend{
 func (lc *LcServerPool) GetValidPeer() *Backend{
 	var targetBackend *Backend;
 	for backend := range(lc.backends){
-		if targetBackend == nil{
+		if targetBackend == nil && backend.IsAlive(){
 			targetBackend = backend
 		}else{
-			if targetBackend.connections > backend.connections{
+			if backend.IsAlive() && targetBackend.connections > backend.connections{
 				targetBackend = backend
 			}
 		}
