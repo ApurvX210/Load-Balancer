@@ -12,6 +12,8 @@ type Server interface {
 	SetAlive(alive bool)
 	GetUrl() *url.URL
 	GetActiveConnection() int
+	IncConnectionCount()
+	DecConnectionCount()
 	Serve(http.ResponseWriter,*http.Request)
 }
 
@@ -42,7 +44,33 @@ func (b *Backend) GetActiveConnection() int{
 	return b.connections
 }
 
+func (b *Backend) IncConnectionCount(){
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	b.connections += 1
+}
+
+func (b *Backend) DecConnectionCount(){
+	b.mu.Lock()
+	defer b.mu.Unlock()
+	b.connections -= 1
+}
+
 func (b *Backend) Serve(rw http.ResponseWriter,req *http.Request){
 	b.reverseProxy.ServeHTTP(rw,req)
 }
 
+func NewBackend(rawUrl string) (*Backend,error){
+	url,err := url.Parse(rawUrl)
+
+	if err != nil{
+		return nil,err
+	}
+
+	reverseProxy := httputil.NewSingleHostReverseProxy(url)
+
+	return &Backend{
+		url: url,
+		reverseProxy: reverseProxy,
+	},nil
+}
