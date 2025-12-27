@@ -1,0 +1,19 @@
+server:
+  port: ":8080"
+  readTimeout: "30s"
+  writeTimeout: "30s"
+
+load_balancer:
+  algorithm: "round_robin"
+
+backends:
+  - url: "http://localhost:8081"
+    initial_alive: true
+  - url: "http://localhost:8082"
+    initial_alive: true
+  - url: "http://localhost:8083"
+    initial_alive: true
+
+health_check:
+  interval: "5s"
+  endpoint: "/health"

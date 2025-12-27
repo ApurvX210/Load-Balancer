@@ -1,7 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"LoadBalancer/loadBalancer"
+	"LoadBalancer/server"
+	"fmt"
+	"net/http"
+)
+
+func requestHandler(rq http.ResponseWriter, req *http.Request) {
+
+}
+
+
 
 func main() {
-	fmt.Println("Server")
+	sp := &server.RrServerPool{}
+	lb := loadbalancer.NewLoadBalancer(sp)
+	fmt.Println(lb)
 }
