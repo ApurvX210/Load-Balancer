@@ -3,18 +3,18 @@ package server
 import "sync"
 
 type LcServerPool struct {
-	backends  []*Backend
+	Backends  []*Backend
 	mu        sync.RWMutex
 	// crnPeer *Backend
 }
 
 func (lc *LcServerPool) GetServerPool() []*Backend{
-	return lc.backends
+	return lc.Backends
 }
 
 func (lc *LcServerPool) GetValidPeer() *Backend{
 	var targetBackend *Backend;
-	for _,backend := range(lc.backends){
+	for _,backend := range(lc.Backends){
 		if targetBackend == nil && backend.IsAlive(){
 			targetBackend = backend
 		}else{
@@ -28,9 +28,9 @@ func (lc *LcServerPool) GetValidPeer() *Backend{
 }
 
 func (lc *LcServerPool) AddPeer(b *Backend) {
-	lc.backends = append(lc.backends, b)
+	lc.Backends = append(lc.Backends, b)
 }
 
 func (lc *LcServerPool) GetServerPoolSize() int{
-	return len(lc.backends)
+	return len(lc.Backends)
 }

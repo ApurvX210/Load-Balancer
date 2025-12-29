@@ -3,13 +3,13 @@ package server
 import "sync"
 
 type RrServerPool struct {
-	backends  []*Backend
+	Backends  []*Backend
 	mu        sync.RWMutex
 	crnIndex  int
 }
 
 func (lc *RrServerPool) GetServerPool() []*Backend{
-	return lc.backends
+	return lc.Backends
 }
 
 func (lc *RrServerPool) Rotate() *Backend{
@@ -18,7 +18,7 @@ func (lc *RrServerPool) Rotate() *Backend{
 
 	lc.crnIndex = (lc.crnIndex+1) % lc.GetServerPoolSize()
 
-	return lc.backends[lc.crnIndex]
+	return lc.Backends[lc.crnIndex]
 }
 
 func (lc *RrServerPool) GetValidPeer() *Backend{
@@ -34,9 +34,9 @@ func (lc *RrServerPool) GetValidPeer() *Backend{
 }
 
 func (lc *RrServerPool) AddPeer(b *Backend) {
-	lc.backends = append(lc.backends, b)
+	lc.Backends = append(lc.Backends, b)
 }
 
 func (lc *RrServerPool) GetServerPoolSize() int{
-	return len(lc.backends)
+	return len(lc.Backends)
 }
