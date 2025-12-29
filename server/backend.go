@@ -60,7 +60,7 @@ func (b *Backend) Serve(rw http.ResponseWriter,req *http.Request){
 	b.reverseProxy.ServeHTTP(rw,req)
 }
 
-func NewBackend(rawUrl string) (*Backend,error){
+func NewBackend(rawUrl string,alive bool) (*Backend,error){
 	url,err := url.Parse(rawUrl)
 
 	if err != nil{
@@ -71,6 +71,7 @@ func NewBackend(rawUrl string) (*Backend,error){
 
 	return &Backend{
 		url: url,
+		Alive: alive,
 		reverseProxy: reverseProxy,
 	},nil
 }
