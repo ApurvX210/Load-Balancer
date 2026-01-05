@@ -8,35 +8,52 @@ type RrServerPool struct {
 	crnIndex  int
 }
 
-func (lc *RrServerPool) GetServerPool() []*Backend{
-	return lc.Backends
+func (rr *RrServerPool) GetServerPool() []*Backend{
+	rr.mu.RLock()
+	defer rr.mu.RUnlock()
+	return rr.Backends
 }
 
-func (lc *RrServerPool) Rotate() *Backend{
-	lc.mu.Lock()
-	defer lc.mu.Unlock()
+func (rr *RrServerPool) Rotate() *Backend{
+	rr.mu.Lock()
+	defer rr.mu.Unlock()
 
-	lc.crnIndex = (lc.crnIndex+1) % lc.GetServerPoolSize()
+	poolSize := len(rr.Backends)
+	if poolSize == 0 {
+		return nil
+	}
 
-	return lc.Backends[lc.crnIndex]
+	rr.crnIndex = (rr.crnIndex+1) % poolSize
+
+	return rr.Backends[rr.crnIndex]
 }
 
-func (lc *RrServerPool) GetValidPeer() *Backend{
-	crnLen := lc.GetServerPoolSize()
+func (rr *RrServerPool) GetValidPeer() *Backend{
+	rr.mu.RLock()
+	crnLen := len(rr.Backends)
+	rr.mu.RUnlock()
+
+	if crnLen == 0 {
+		return nil
+	}
 
 	for idx:=0;idx<crnLen;idx++{
-		targetServer := lc.Rotate()
-		if targetServer.IsAlive(){
+		targetServer := rr.Rotate()
+		if targetServer != nil && targetServer.IsAlive(){
 			return targetServer
 		}
 	}
 	return nil
 }
 
-func (lc *RrServerPool) AddPeer(b *Backend) {
-	lc.Backends = append(lc.Backends, b)
+func (rr *RrServerPool) AddPeer(b *Backend) {
+	rr.mu.Lock()
+	defer rr.mu.Unlock()
+	rr.Backends = append(rr.Backends, b)
 }
 
-func (lc *RrServerPool) GetServerPoolSize() int{
-	return len(lc.Backends)
+func (rr *RrServerPool) GetServerPoolSize() int{
+	rr.mu.RLock()
+	defer rr.mu.RUnlock()
+	return len(rr.Backends)
 }
