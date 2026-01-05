@@ -10,7 +10,7 @@ type Config struct {
 	Server struct {
 		Port         string `yaml:"port"`
 		ReadTimeout  string `yaml:"readTimeout"`
-		WriteTimeout string `yaml:"rriteTimeout"`
+		WriteTimeout string `yaml:"writeTimeout"`
 	} `yaml:"server"`
 	LoadBalancer struct {
 		Algorithm string `yaml:"algorithm"`
